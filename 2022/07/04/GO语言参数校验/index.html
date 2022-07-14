@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/hexoblog.github.io/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/hexoblog.github.io/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/hexoblog.github.io/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/hexoblog.github.io/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/hexoblog.github.io/css/main.css">
+
+
+<link rel="stylesheet" href="/hexoblog.github.io/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="/hexoblog.github.io/lib/pace/pace-theme-minimal.min.css">
+  <script src="/hexoblog.github.io/lib/pace/pace.min.js"></script>
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"cofeesy.github.io","root":"/hexoblog.github.io/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"./public/search.xml"};
+  </script>
+
+  <meta name="description" content="#前言在服务器中需要接收前端发送过来的请求并且进行处理，而这些请求往往是附带参数的，所以对参数的处理是非常重要的一环">
+<meta property="og:type" content="article">
+<meta property="og:title" content="GO语言参数校验">
+<meta property="og:url" content="https://cofeesy.github.io/hexoblog.github.io/2022/07/04/GO%E8%AF%AD%E8%A8%80%E5%8F%82%E6%95%B0%E6%A0%A1%E9%AA%8C/index.html">
+<meta property="og:site_name" content="Cofeesy的博客">
+<meta property="og:description" content="#前言在服务器中需要接收前端发送过来的请求并且进行处理，而这些请求往往是附带参数的，所以对参数的处理是非常重要的一环">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-07-04T08:44:07.000Z">
+<meta property="article:modified_time" content="2022-07-10T06:49:50.921Z">
+<meta property="article:author" content="Cofeesy">
+<meta property="article:tag" content="·Go">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://cofeesy.github.io/hexoblog.github.io/2022/07/04/GO%E8%AF%AD%E8%A8%80%E5%8F%82%E6%95%B0%E6%A0%A1%E9%AA%8C/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>GO语言参数校验 | Cofeesy的博客</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/hexoblog.github.io/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Cofeesy的博客</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">极简至上</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/hexoblog.github.io/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/hexoblog.github.io/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/hexoblog.github.io/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/hexoblog.github.io/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://cofeesy.github.io/hexoblog.github.io/2022/07/04/GO%E8%AF%AD%E8%A8%80%E5%8F%82%E6%95%B0%E6%A0%A1%E9%AA%8C/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/hexoblog.github.io/images/avatar.gif">
+      <meta itemprop="name" content="Cofeesy">
+      <meta itemprop="description" content="凡是过往，皆为序章">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Cofeesy的博客">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          GO语言参数校验
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-07-04 16:44:07" itemprop="dateCreated datePublished" datetime="2022-07-04T16:44:07+08:00">2022-07-04</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-07-10 14:49:50" itemprop="dateModified" datetime="2022-07-10T14:49:50+08:00">2022-07-10</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/hexoblog.github.io/categories/GO%E8%AF%AD%E8%A8%80/" itemprop="url" rel="index"><span itemprop="name">GO语言</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="前言"><a href="#前言" class="headerlink" title="#前言"></a>#前言</h1><h5 id="在服务器中需要接收前端发送过来的请求并且进行处理，而这些请求往往是附带参数的，所以对参数的处理是非常重要的一环"><a href="#在服务器中需要接收前端发送过来的请求并且进行处理，而这些请求往往是附带参数的，所以对参数的处理是非常重要的一环" class="headerlink" title="在服务器中需要接收前端发送过来的请求并且进行处理，而这些请求往往是附带参数的，所以对参数的处理是非常重要的一环"></a>在服务器中需要接收前端发送过来的请求并且进行处理，而这些请求往往是附带参数的，所以对参数的处理是非常重要的一环</h5><hr>
+<span id="more"></span>
+<h1 id="何为参数校验？"><a href="#何为参数校验？" class="headerlink" title="#何为参数校验？"></a>#何为参数校验？</h1><h5 id="顾名思义就是对请求所附带的参数进行验证（可以理解为后端对前端所发送的数据的进一步筛选处理，然后返回对应的逻辑）"><a href="#顾名思义就是对请求所附带的参数进行验证（可以理解为后端对前端所发送的数据的进一步筛选处理，然后返回对应的逻辑）" class="headerlink" title="顾名思义就是对请求所附带的参数进行验证（可以理解为后端对前端所发送的数据的进一步筛选处理，然后返回对应的逻辑）"></a>顾名思义就是对请求所附带的参数进行验证（可以理解为后端对前端所发送的数据的进一步筛选处理，然后返回对应的逻辑）</h5><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">https://www.baidu.com/s?ie=UTF-8&amp;wd=JSR303</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h5 id="上面这段请求中，”-”后面的内容就是参数-参数是以键值对的形式出现-，还有的参数并不会出现在url当中，他们会包含在请求体当中，通过url是看不到的。"><a href="#上面这段请求中，”-”后面的内容就是参数-参数是以键值对的形式出现-，还有的参数并不会出现在url当中，他们会包含在请求体当中，通过url是看不到的。" class="headerlink" title="上面这段请求中，”?”后面的内容就是参数(参数是以键值对的形式出现)，还有的参数并不会出现在url当中，他们会包含在请求体当中，通过url是看不到的。"></a>上面这段请求中，”?”后面的内容就是参数(参数是以键值对的形式出现)，还有的参数并不会出现在url当中，他们会包含在请求体当中，通过url是看不到的。</h5><hr>
+<h1 id="goland参数校验"><a href="#goland参数校验" class="headerlink" title="#goland参数校验"></a>#goland参数校验</h1><h3 id="常见的参数校验可以分为以下两种："><a href="#常见的参数校验可以分为以下两种：" class="headerlink" title="常见的参数校验可以分为以下两种："></a>常见的参数校验可以分为以下两种：</h3><p> -客户端参数校验：在数据提交到服务器之前，发生在浏览器端或者app应用端，相比服务器端校验，用户体验更好，能实时反馈用户的输入校验结果。</p>
+<p> -服务器端参数校验：发生在客户端提交数据并被服务器端程序接收之后，通常服务器端校验都是发生在将数据写入数据库之前，如果数据没通过校验，则会直接从服务器端返回错误消息，并且告诉客户端发生错误的具体位置和原因，服务器端校验不像客户端校验那样有好的用户体验，因为它直到整个表单都提交后才能返回错误信息。但是服务器端校验是应用对抗错误，恶意数据的最后防线，在这之后，数据将被持久化至数据库。当今所有的服务端框架都提供了数据校验与过滤功能（让数据更安全）。</p>
+<h3 id="针对服务器-go语言参数校验的三种方式-相关文档地址-https-juejin-cn-post-7041508590913323039-作者：巫师韩-："><a href="#针对服务器-go语言参数校验的三种方式-相关文档地址-https-juejin-cn-post-7041508590913323039-作者：巫师韩-：" class="headerlink" title="针对服务器-go语言参数校验的三种方式(相关文档地址:https://juejin.cn/post/7041508590913323039;作者：巫师韩)："></a>针对服务器-go语言参数校验的三种方式(相关文档地址:<a target="_blank" rel="noopener" href="https://juejin.cn/post/7041508590913323039;%E4%BD%9C%E8%80%85%EF%BC%9A%E5%B7%AB%E5%B8%88%E9%9F%A9)%EF%BC%9A">https://juejin.cn/post/7041508590913323039;作者：巫师韩)：</a></h3><h3 id="01-第一种实现方式：自定义实现参数校验逻辑"><a href="#01-第一种实现方式：自定义实现参数校验逻辑" class="headerlink" title="01 第一种实现方式：自定义实现参数校验逻辑"></a>01 第一种实现方式：自定义实现参数校验逻辑</h3><h6 id="Controller层职责：从HTTP请求中获得信息，提取参数，并分发给不同的处理服务。"><a href="#Controller层职责：从HTTP请求中获得信息，提取参数，并分发给不同的处理服务。" class="headerlink" title="Controller层职责：从HTTP请求中获得信息，提取参数，并分发给不同的处理服务。"></a><strong>Controller层职责：从HTTP请求中获得信息，提取参数，并分发给不同的处理服务。</strong></h6><h6 id="重复代码是软件质量下降的重大来源"><a href="#重复代码是软件质量下降的重大来源" class="headerlink" title="重复代码是软件质量下降的重大来源"></a><strong>重复代码是软件质量下降的重大来源</strong></h6><h3 id="02-第二种实现方式：模型绑定校验–go-playground-x2F-validator–一款优秀的Go语言校验库，基于标记为结构体和单个字段实现值验证。使用简单、快捷-代码来源：https-blog-csdn-net-weixin-42117918-article-details-107407053-ops-request-misc-257B-2522request-255Fid-2522-253A-2522165692403116780357281208-2522-252C-2522scm-2522-253A-252220140713-130102334-2522-257D-amp-request-id-165692403116780357281208-amp-biz-id-0-amp-utm-medium-distribute-pc-search-result-none-task-blog-2-all-sobaiduend-default-1-107407053-null-null-142-v30-pc-rank-34-185-v2-control-amp-utm-term-go-E8-AF-AD-E8-A8-80-E5-8F-82-E6-95-B0-E6-A0-A1-E9-AA-8C-amp-spm-1018-2226-3001-4187-gt-结构体验证示例"><a href="#02-第二种实现方式：模型绑定校验–go-playground-x2F-validator–一款优秀的Go语言校验库，基于标记为结构体和单个字段实现值验证。使用简单、快捷-代码来源：https-blog-csdn-net-weixin-42117918-article-details-107407053-ops-request-misc-257B-2522request-255Fid-2522-253A-2522165692403116780357281208-2522-252C-2522scm-2522-253A-252220140713-130102334-2522-257D-amp-request-id-165692403116780357281208-amp-biz-id-0-amp-utm-medium-distribute-pc-search-result-none-task-blog-2-all-sobaiduend-default-1-107407053-null-null-142-v30-pc-rank-34-185-v2-control-amp-utm-term-go-E8-AF-AD-E8-A8-80-E5-8F-82-E6-95-B0-E6-A0-A1-E9-AA-8C-amp-spm-1018-2226-3001-4187-gt-结构体验证示例" class="headerlink" title="02 第二种实现方式：模型绑定校验–go-playground &#x2F; validator–一款优秀的Go语言校验库，基于标记为结构体和单个字段实现值验证。使用简单、快捷(代码来源：https://blog.csdn.net/weixin_42117918/article/details/107407053?ops_request_misc=%257B%2522request%255Fid%2522%253A%2522165692403116780357281208%2522%252C%2522scm%2522%253A%252220140713.130102334..%2522%257D&amp;request_id=165692403116780357281208&amp;biz_id=0&amp;utm_medium=distribute.pc_search_result.none-task-blog-2~all~sobaiduend~default-1-107407053-null-null.142^v30^pc_rank_34,185^v2^control&amp;utm_term=go%E8%AF%AD%E8%A8%80%E5%8F%82%E6%95%B0%E6%A0%A1%E9%AA%8C&amp;spm=1018.2226.3001.4187)--&gt;结构体验证示例"></a>02 第二种实现方式：模型绑定校验–go-playground &#x2F; validator–一款优秀的Go语言校验库，基于标记为结构体和单个字段实现值验证。使用简单、快捷(代码来源：<a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_42117918/article/details/107407053?ops_request_misc=%257B%2522request%255Fid%2522%253A%2522165692403116780357281208%2522%252C%2522scm%2522%253A%252220140713.130102334..%2522%257D&amp;request_id=165692403116780357281208&amp;biz_id=0&amp;utm_medium=distribute.pc_search_result.none-task-blog-2~all~sobaiduend~default-1-107407053-null-null.142%5Ev30%5Epc_rank_34,185%5Ev2%5Econtrol&amp;utm_term=go%E8%AF%AD%E8%A8%80%E5%8F%82%E6%95%B0%E6%A0%A1%E9%AA%8C&amp;spm=1018.2226.3001.4187)--&gt;%E7%BB%93%E6%9E%84%E4%BD%93%E9%AA%8C%E8%AF%81%E7%A4%BA%E4%BE%8B">https://blog.csdn.net/weixin_42117918/article/details/107407053?ops_request_misc=%257B%2522request%255Fid%2522%253A%2522165692403116780357281208%2522%252C%2522scm%2522%253A%252220140713.130102334..%2522%257D&amp;request_id=165692403116780357281208&amp;biz_id=0&amp;utm_medium=distribute.pc_search_result.none-task-blog-2~all~sobaiduend~default-1-107407053-null-null.142^v30^pc_rank_34,185^v2^control&amp;utm_term=go%E8%AF%AD%E8%A8%80%E5%8F%82%E6%95%B0%E6%A0%A1%E9%AA%8C&amp;spm=1018.2226.3001.4187)--&gt;结构体验证示例</a></h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">go get github.com/go-playground/validator</span><br></pre></td></tr></table></figure>
+
+<h5 id="代码示例"><a href="#代码示例" class="headerlink" title="代码示例"></a>代码示例</h5><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br></pre></td><td class="code"><pre><span class="line">package main</span><br><span class="line"> </span><br><span class="line">import (</span><br><span class="line">	&quot;fmt&quot;</span><br><span class="line">	&quot;github.com/go-playground/validator&quot;</span><br><span class="line">)</span><br><span class="line"> </span><br><span class="line">var validate *validator.Validate //定义</span><br><span class="line"> </span><br><span class="line">type User struct &#123;</span><br><span class="line">	Name  string `validate:&quot;required&quot;` //非空</span><br><span class="line">	Age   uint8  `validate:&quot;gte=0,lte=130&quot;` //  0&lt;=Age&lt;=130</span><br><span class="line">	Email string `validate:&quot;required,email&quot;` //非空，email格式</span><br><span class="line">	//dive关键字代表 进入到嵌套结构体进行判断</span><br><span class="line">	Address []*Address `validate:&quot;dive&quot;` //  可以拥有多个地址</span><br><span class="line">&#125;</span><br><span class="line">type Address struct &#123;</span><br><span class="line">	Province string `validate:&quot;required&quot;` //非空</span><br><span class="line">	City     string `validate:&quot;required&quot;` //非空</span><br><span class="line">	Phone    string `validate:&quot;numeric,len=11&quot;` //数字类型，长度为11</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line">func main() &#123;</span><br><span class="line">	validate = validator.New() //初始化（赋值）</span><br><span class="line">	validateStruct()           //结构体校验</span><br><span class="line">	validateVariable()         //变量校验</span><br><span class="line">&#125;</span><br><span class="line">func validateStruct() &#123;</span><br><span class="line">	address := Address&#123;</span><br><span class="line">		Province: &quot;重庆&quot;,</span><br><span class="line">		City:     &quot;重庆&quot;,</span><br><span class="line">		Phone:    &quot;13366663333x&quot;,</span><br><span class="line">	&#125;</span><br><span class="line">	user := User&#123;</span><br><span class="line">		Name:  &quot;江洲&quot;,</span><br><span class="line">		Age:   23,</span><br><span class="line">		Email: &quot;jz@163.com&quot;,</span><br><span class="line">		Address: []*Address&#123;&amp;address&#125;,</span><br><span class="line">	&#125;</span><br><span class="line">	err := validate.Struct(user)</span><br><span class="line">	if err != nil &#123;</span><br><span class="line">		//断言为：validator.ValidationErrors，类型为：[]FieldError</span><br><span class="line">		for _, e := range err.(validator.ValidationErrors) &#123;</span><br><span class="line">			fmt.Println(&quot;Namespace:&quot;, e.Namespace())</span><br><span class="line">			fmt.Println(&quot;Field:&quot;, e.Field())</span><br><span class="line">			fmt.Println(&quot;StructNamespace:&quot;, e.StructNamespace())</span><br><span class="line">			fmt.Println(&quot;StructField:&quot;, e.StructField())</span><br><span class="line">			fmt.Println(&quot;Tag:&quot;, e.Tag())</span><br><span class="line">			fmt.Println(&quot;ActualTag:&quot;, e.ActualTag())</span><br><span class="line">			fmt.Println(&quot;Kind:&quot;, e.Kind())</span><br><span class="line">			fmt.Println(&quot;Type:&quot;, e.Type())</span><br><span class="line">			fmt.Println(&quot;Value:&quot;, e.Value())</span><br><span class="line">			fmt.Println(&quot;Param:&quot;, e.Param())</span><br><span class="line">			fmt.Println()</span><br><span class="line">		&#125;</span><br><span class="line"> </span><br><span class="line">		fmt.Println(&quot;结构体输入数据类型错误！&quot;)</span><br><span class="line">		return</span><br><span class="line">	&#125; else &#123;</span><br><span class="line">		fmt.Println(&quot;结构体校验通过&quot;)</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line">//变量校验</span><br><span class="line">func validateVariable() &#123;</span><br><span class="line">	myEmail := &quot;123@qq.com&quot; //邮箱地址：xx@xx.com</span><br><span class="line">	err := validate.Var(myEmail, &quot;required,email&quot;)</span><br><span class="line">	if err != nil &#123;</span><br><span class="line">		fmt.Println(err)</span><br><span class="line">	&#125; else &#123;</span><br><span class="line">		fmt.Println(&quot;变量校验通过！&quot;)</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="结果"><a href="#结果" class="headerlink" title="结果"></a>结果</h5><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">Namespace: User.Address[0].Phone</span><br><span class="line">Field: phone</span><br><span class="line">StructNamespace: User.Address[0].Phone</span><br><span class="line">StructFiled: Phone</span><br><span class="line">Tag: numeric</span><br><span class="line">ActualTag: numeric</span><br><span class="line">Kind: string</span><br><span class="line">Type: string</span><br><span class="line">Value: 13366663333x</span><br><span class="line">Param:</span><br><span class="line"></span><br><span class="line">结构体输入数据类型错误！</span><br><span class="line">变量校验通过！</span><br></pre></td></tr></table></figure>
+
+<h3 id="模型校验是通过反射机制来实现的，而反射效率相对来说效率不高-可以从ShouldBind函数从下追，把自带的校验功能屏蔽，提高框架效率"><a href="#模型校验是通过反射机制来实现的，而反射效率相对来说效率不高-可以从ShouldBind函数从下追，把自带的校验功能屏蔽，提高框架效率" class="headerlink" title="模型校验是通过反射机制来实现的，而反射效率相对来说效率不高(可以从ShouldBind函数从下追，把自带的校验功能屏蔽，提高框架效率???!!!)"></a><strong>模型校验是通过反射机制来实现的，而反射效率相对来说效率不高(可以从ShouldBind函数从下追，把自带的校验功能屏蔽，提高框架效率???!!!)</strong></h3><h3 id="03-第三种实现方式：拆解模型字段，组合结构体"><a href="#03-第三种实现方式：拆解模型字段，组合结构体" class="headerlink" title="#03 第三种实现方式：拆解模型字段，组合结构体"></a>#03 第三种实现方式：拆解模型字段，组合结构体</h3>
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div>坚持原创技术分享，您的支持将鼓励我继续创作.</div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/hexoblog.github.io/images/wechatpay.png" alt="Cofeesy 微信支付">
+        <p>微信支付</p>
+      </div>
+      
+      <div style="display: inline-block;">
+        <img src="/hexoblog.github.io/images/alipay.png" alt="Cofeesy 支付宝">
+        <p>支付宝</p>
+      </div>
+
+  </div>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/hexoblog.github.io/tags/%C2%B7Go/" rel="tag"><i class="fa fa-tag"></i>·Go</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/hexoblog.github.io/2022/07/04/Rust%E8%B8%A9%E5%9D%91%E6%97%A5%E8%AE%B001/" rel="prev" title="Rust踩坑日记01">
+      <i class="fa fa-chevron-left"></i> Rust踩坑日记01
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/hexoblog.github.io/2022/07/05/Go%E8%AF%AD%E8%A8%80%E5%9F%BA%E7%A1%80-%E6%9F%A5%E6%BC%8F%E8%A1%A5%E7%BC%BA/" rel="next" title="Go语言基础--查漏补缺">
+      Go语言基础--查漏补缺 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">#前言</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%9C%A8%E6%9C%8D%E5%8A%A1%E5%99%A8%E4%B8%AD%E9%9C%80%E8%A6%81%E6%8E%A5%E6%94%B6%E5%89%8D%E7%AB%AF%E5%8F%91%E9%80%81%E8%BF%87%E6%9D%A5%E7%9A%84%E8%AF%B7%E6%B1%82%E5%B9%B6%E4%B8%94%E8%BF%9B%E8%A1%8C%E5%A4%84%E7%90%86%EF%BC%8C%E8%80%8C%E8%BF%99%E4%BA%9B%E8%AF%B7%E6%B1%82%E5%BE%80%E5%BE%80%E6%98%AF%E9%99%84%E5%B8%A6%E5%8F%82%E6%95%B0%E7%9A%84%EF%BC%8C%E6%89%80%E4%BB%A5%E5%AF%B9%E5%8F%82%E6%95%B0%E7%9A%84%E5%A4%84%E7%90%86%E6%98%AF%E9%9D%9E%E5%B8%B8%E9%87%8D%E8%A6%81%E7%9A%84%E4%B8%80%E7%8E%AF"><span class="nav-number">1.0.0.0.1.</span> <span class="nav-text">在服务器中需要接收前端发送过来的请求并且进行处理，而这些请求往往是附带参数的，所以对参数的处理是非常重要的一环</span></a></li></ol></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BD%95%E4%B8%BA%E5%8F%82%E6%95%B0%E6%A0%A1%E9%AA%8C%EF%BC%9F"><span class="nav-number">2.</span> <span class="nav-text">#何为参数校验？</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E9%A1%BE%E5%90%8D%E6%80%9D%E4%B9%89%E5%B0%B1%E6%98%AF%E5%AF%B9%E8%AF%B7%E6%B1%82%E6%89%80%E9%99%84%E5%B8%A6%E7%9A%84%E5%8F%82%E6%95%B0%E8%BF%9B%E8%A1%8C%E9%AA%8C%E8%AF%81%EF%BC%88%E5%8F%AF%E4%BB%A5%E7%90%86%E8%A7%A3%E4%B8%BA%E5%90%8E%E7%AB%AF%E5%AF%B9%E5%89%8D%E7%AB%AF%E6%89%80%E5%8F%91%E9%80%81%E7%9A%84%E6%95%B0%E6%8D%AE%E7%9A%84%E8%BF%9B%E4%B8%80%E6%AD%A5%E7%AD%9B%E9%80%89%E5%A4%84%E7%90%86%EF%BC%8C%E7%84%B6%E5%90%8E%E8%BF%94%E5%9B%9E%E5%AF%B9%E5%BA%94%E7%9A%84%E9%80%BB%E8%BE%91%EF%BC%89"><span class="nav-number">2.0.0.0.1.</span> <span class="nav-text">顾名思义就是对请求所附带的参数进行验证（可以理解为后端对前端所发送的数据的进一步筛选处理，然后返回对应的逻辑）</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%B8%8A%E9%9D%A2%E8%BF%99%E6%AE%B5%E8%AF%B7%E6%B1%82%E4%B8%AD%EF%BC%8C%E2%80%9D-%E2%80%9D%E5%90%8E%E9%9D%A2%E7%9A%84%E5%86%85%E5%AE%B9%E5%B0%B1%E6%98%AF%E5%8F%82%E6%95%B0-%E5%8F%82%E6%95%B0%E6%98%AF%E4%BB%A5%E9%94%AE%E5%80%BC%E5%AF%B9%E7%9A%84%E5%BD%A2%E5%BC%8F%E5%87%BA%E7%8E%B0-%EF%BC%8C%E8%BF%98%E6%9C%89%E7%9A%84%E5%8F%82%E6%95%B0%E5%B9%B6%E4%B8%8D%E4%BC%9A%E5%87%BA%E7%8E%B0%E5%9C%A8url%E5%BD%93%E4%B8%AD%EF%BC%8C%E4%BB%96%E4%BB%AC%E4%BC%9A%E5%8C%85%E5%90%AB%E5%9C%A8%E8%AF%B7%E6%B1%82%E4%BD%93%E5%BD%93%E4%B8%AD%EF%BC%8C%E9%80%9A%E8%BF%87url%E6%98%AF%E7%9C%8B%E4%B8%8D%E5%88%B0%E7%9A%84%E3%80%82"><span class="nav-number">2.0.0.0.2.</span> <span class="nav-text">上面这段请求中，”?”后面的内容就是参数(参数是以键值对的形式出现)，还有的参数并不会出现在url当中，他们会包含在请求体当中，通过url是看不到的。</span></a></li></ol></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#goland%E5%8F%82%E6%95%B0%E6%A0%A1%E9%AA%8C"><span class="nav-number">3.</span> <span class="nav-text">#goland参数校验</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B8%B8%E8%A7%81%E7%9A%84%E5%8F%82%E6%95%B0%E6%A0%A1%E9%AA%8C%E5%8F%AF%E4%BB%A5%E5%88%86%E4%B8%BA%E4%BB%A5%E4%B8%8B%E4%B8%A4%E7%A7%8D%EF%BC%9A"><span class="nav-number">3.0.1.</span> <span class="nav-text">常见的参数校验可以分为以下两种：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%92%88%E5%AF%B9%E6%9C%8D%E5%8A%A1%E5%99%A8-go%E8%AF%AD%E8%A8%80%E5%8F%82%E6%95%B0%E6%A0%A1%E9%AA%8C%E7%9A%84%E4%B8%89%E7%A7%8D%E6%96%B9%E5%BC%8F-%E7%9B%B8%E5%85%B3%E6%96%87%E6%A1%A3%E5%9C%B0%E5%9D%80-https-juejin-cn-post-7041508590913323039-%E4%BD%9C%E8%80%85%EF%BC%9A%E5%B7%AB%E5%B8%88%E9%9F%A9-%EF%BC%9A"><span class="nav-number">3.0.2.</span> <span class="nav-text">针对服务器-go语言参数校验的三种方式(相关文档地址:https:&#x2F;&#x2F;juejin.cn&#x2F;post&#x2F;7041508590913323039;作者：巫师韩)：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#01-%E7%AC%AC%E4%B8%80%E7%A7%8D%E5%AE%9E%E7%8E%B0%E6%96%B9%E5%BC%8F%EF%BC%9A%E8%87%AA%E5%AE%9A%E4%B9%89%E5%AE%9E%E7%8E%B0%E5%8F%82%E6%95%B0%E6%A0%A1%E9%AA%8C%E9%80%BB%E8%BE%91"><span class="nav-number">3.0.3.</span> <span class="nav-text">01 第一种实现方式：自定义实现参数校验逻辑</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#Controller%E5%B1%82%E8%81%8C%E8%B4%A3%EF%BC%9A%E4%BB%8EHTTP%E8%AF%B7%E6%B1%82%E4%B8%AD%E8%8E%B7%E5%BE%97%E4%BF%A1%E6%81%AF%EF%BC%8C%E6%8F%90%E5%8F%96%E5%8F%82%E6%95%B0%EF%BC%8C%E5%B9%B6%E5%88%86%E5%8F%91%E7%BB%99%E4%B8%8D%E5%90%8C%E7%9A%84%E5%A4%84%E7%90%86%E6%9C%8D%E5%8A%A1%E3%80%82"><span class="nav-number">3.0.3.0.0.1.</span> <span class="nav-text">Controller层职责：从HTTP请求中获得信息，提取参数，并分发给不同的处理服务。</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#%E9%87%8D%E5%A4%8D%E4%BB%A3%E7%A0%81%E6%98%AF%E8%BD%AF%E4%BB%B6%E8%B4%A8%E9%87%8F%E4%B8%8B%E9%99%8D%E7%9A%84%E9%87%8D%E5%A4%A7%E6%9D%A5%E6%BA%90"><span class="nav-number">3.0.3.0.0.2.</span> <span class="nav-text">重复代码是软件质量下降的重大来源</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#02-%E7%AC%AC%E4%BA%8C%E7%A7%8D%E5%AE%9E%E7%8E%B0%E6%96%B9%E5%BC%8F%EF%BC%9A%E6%A8%A1%E5%9E%8B%E7%BB%91%E5%AE%9A%E6%A0%A1%E9%AA%8C%E2%80%93go-playground-x2F-validator%E2%80%93%E4%B8%80%E6%AC%BE%E4%BC%98%E7%A7%80%E7%9A%84Go%E8%AF%AD%E8%A8%80%E6%A0%A1%E9%AA%8C%E5%BA%93%EF%BC%8C%E5%9F%BA%E4%BA%8E%E6%A0%87%E8%AE%B0%E4%B8%BA%E7%BB%93%E6%9E%84%E4%BD%93%E5%92%8C%E5%8D%95%E4%B8%AA%E5%AD%97%E6%AE%B5%E5%AE%9E%E7%8E%B0%E5%80%BC%E9%AA%8C%E8%AF%81%E3%80%82%E4%BD%BF%E7%94%A8%E7%AE%80%E5%8D%95%E3%80%81%E5%BF%AB%E6%8D%B7-%E4%BB%A3%E7%A0%81%E6%9D%A5%E6%BA%90%EF%BC%9Ahttps-blog-csdn-net-weixin-42117918-article-details-107407053-ops-request-misc-257B-2522request-255Fid-2522-253A-2522165692403116780357281208-2522-252C-2522scm-2522-253A-252220140713-130102334-2522-257D-amp-request-id-165692403116780357281208-amp-biz-id-0-amp-utm-medium-distribute-pc-search-result-none-task-blog-2-all-sobaiduend-default-1-107407053-null-null-142-v30-pc-rank-34-185-v2-control-amp-utm-term-go-E8-AF-AD-E8-A8-80-E5-8F-82-E6-95-B0-E6-A0-A1-E9-AA-8C-amp-spm-1018-2226-3001-4187-gt-%E7%BB%93%E6%9E%84%E4%BD%93%E9%AA%8C%E8%AF%81%E7%A4%BA%E4%BE%8B"><span class="nav-number">3.0.4.</span> <span class="nav-text">02 第二种实现方式：模型绑定校验–go-playground &#x2F; validator–一款优秀的Go语言校验库，基于标记为结构体和单个字段实现值验证。使用简单、快捷(代码来源：https:&#x2F;&#x2F;blog.csdn.net&#x2F;weixin_42117918&#x2F;article&#x2F;details&#x2F;107407053?ops_request_misc&#x3D;%257B%2522request%255Fid%2522%253A%2522165692403116780357281208%2522%252C%2522scm%2522%253A%252220140713.130102334..%2522%257D&amp;request_id&#x3D;165692403116780357281208&amp;biz_id&#x3D;0&amp;utm_medium&#x3D;distribute.pc_search_result.none-task-blog-2~all~sobaiduend~default-1-107407053-null-null.142^v30^pc_rank_34,185^v2^control&amp;utm_term&#x3D;go%E8%AF%AD%E8%A8%80%E5%8F%82%E6%95%B0%E6%A0%A1%E9%AA%8C&amp;spm&#x3D;1018.2226.3001.4187)--&gt;结构体验证示例</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81%E7%A4%BA%E4%BE%8B"><span class="nav-number">3.0.4.0.1.</span> <span class="nav-text">代码示例</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E7%BB%93%E6%9E%9C"><span class="nav-number">3.0.4.0.2.</span> <span class="nav-text">结果</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A8%A1%E5%9E%8B%E6%A0%A1%E9%AA%8C%E6%98%AF%E9%80%9A%E8%BF%87%E5%8F%8D%E5%B0%84%E6%9C%BA%E5%88%B6%E6%9D%A5%E5%AE%9E%E7%8E%B0%E7%9A%84%EF%BC%8C%E8%80%8C%E5%8F%8D%E5%B0%84%E6%95%88%E7%8E%87%E7%9B%B8%E5%AF%B9%E6%9D%A5%E8%AF%B4%E6%95%88%E7%8E%87%E4%B8%8D%E9%AB%98-%E5%8F%AF%E4%BB%A5%E4%BB%8EShouldBind%E5%87%BD%E6%95%B0%E4%BB%8E%E4%B8%8B%E8%BF%BD%EF%BC%8C%E6%8A%8A%E8%87%AA%E5%B8%A6%E7%9A%84%E6%A0%A1%E9%AA%8C%E5%8A%9F%E8%83%BD%E5%B1%8F%E8%94%BD%EF%BC%8C%E6%8F%90%E9%AB%98%E6%A1%86%E6%9E%B6%E6%95%88%E7%8E%87"><span class="nav-number">3.0.5.</span> <span class="nav-text">模型校验是通过反射机制来实现的，而反射效率相对来说效率不高(可以从ShouldBind函数从下追，把自带的校验功能屏蔽，提高框架效率???!!!)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#03-%E7%AC%AC%E4%B8%89%E7%A7%8D%E5%AE%9E%E7%8E%B0%E6%96%B9%E5%BC%8F%EF%BC%9A%E6%8B%86%E8%A7%A3%E6%A8%A1%E5%9E%8B%E5%AD%97%E6%AE%B5%EF%BC%8C%E7%BB%84%E5%90%88%E7%BB%93%E6%9E%84%E4%BD%93"><span class="nav-number">3.0.6.</span> <span class="nav-text">#03 第三种实现方式：拆解模型字段，组合结构体</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Cofeesy</p>
+  <div class="site-description" itemprop="description">凡是过往，皆为序章</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/hexoblog.github.io/archives/">
+        
+          <span class="site-state-item-count">19</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/hexoblog.github.io/categories/">
+          
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/hexoblog.github.io/tags/">
+          
+        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Cofeesy" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;Cofeesy" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/Cofeesy_zzz" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;Cofeesy_zzz" rel="noopener" target="_blank"><i class="fab fa-twitter fa-fw"></i>Twitter</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Cofeesy</span>
+</div>
+
+<!--
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+-->
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/hexoblog.github.io/lib/anime.min.js"></script>
+  <script src="/hexoblog.github.io/lib/velocity/velocity.min.js"></script>
+  <script src="/hexoblog.github.io/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/hexoblog.github.io/js/utils.js"></script>
+
+<script src="/hexoblog.github.io/js/motion.js"></script>
+
+
+<script src="/hexoblog.github.io/js/schemes/muse.js"></script>
+
+
+<script src="/hexoblog.github.io/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/hexoblog.github.io/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+
+  
+  <script type="text/javascript" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+  
+
+</body>
+</html>

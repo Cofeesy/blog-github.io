@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/hexoblog.github.io/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/hexoblog.github.io/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/hexoblog.github.io/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/hexoblog.github.io/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/hexoblog.github.io/css/main.css">
+
+
+<link rel="stylesheet" href="/hexoblog.github.io/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="/hexoblog.github.io/lib/pace/pace-theme-minimal.min.css">
+  <script src="/hexoblog.github.io/lib/pace/pace.min.js"></script>
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"cofeesy.github.io","root":"/hexoblog.github.io/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"./public/search.xml"};
+  </script>
+
+  <meta name="description" content="#git上传步骤：(仅第一次上传可参考)01 登录github账号，新建仓库&gt;">
+<meta property="og:type" content="article">
+<meta property="og:title" content="git篇--上传以及更新">
+<meta property="og:url" content="https://cofeesy.github.io/hexoblog.github.io/2022/07/07/git%E7%AF%87-%E4%B8%8A%E4%BC%A0%E4%BB%A5%E5%8F%8A%E6%9B%B4%E6%96%B0/index.html">
+<meta property="og:site_name" content="Cofeesy的博客">
+<meta property="og:description" content="#git上传步骤：(仅第一次上传可参考)01 登录github账号，新建仓库&gt;">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cofeesy.github.io/hexoblog.github.io/2022/07/07/git%E7%AF%87-%E4%B8%8A%E4%BC%A0%E4%BB%A5%E5%8F%8A%E6%9B%B4%E6%96%B0/%E6%9B%B4%E6%96%B0.png">
+<meta property="article:published_time" content="2022-07-07T13:11:25.000Z">
+<meta property="article:modified_time" content="2022-07-14T09:15:58.777Z">
+<meta property="article:author" content="Cofeesy">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cofeesy.github.io/hexoblog.github.io/2022/07/07/git%E7%AF%87-%E4%B8%8A%E4%BC%A0%E4%BB%A5%E5%8F%8A%E6%9B%B4%E6%96%B0/%E6%9B%B4%E6%96%B0.png">
+
+<link rel="canonical" href="https://cofeesy.github.io/hexoblog.github.io/2022/07/07/git%E7%AF%87-%E4%B8%8A%E4%BC%A0%E4%BB%A5%E5%8F%8A%E6%9B%B4%E6%96%B0/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>git篇--上传以及更新 | Cofeesy的博客</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/hexoblog.github.io/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Cofeesy的博客</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">极简至上</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/hexoblog.github.io/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/hexoblog.github.io/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/hexoblog.github.io/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/hexoblog.github.io/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://cofeesy.github.io/hexoblog.github.io/2022/07/07/git%E7%AF%87-%E4%B8%8A%E4%BC%A0%E4%BB%A5%E5%8F%8A%E6%9B%B4%E6%96%B0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/hexoblog.github.io/images/avatar.gif">
+      <meta itemprop="name" content="Cofeesy">
+      <meta itemprop="description" content="凡是过往，皆为序章">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Cofeesy的博客">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          git篇--上传以及更新
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-07-07 21:11:25" itemprop="dateCreated datePublished" datetime="2022-07-07T21:11:25+08:00">2022-07-07</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-07-14 17:15:58" itemprop="dateModified" datetime="2022-07-14T17:15:58+08:00">2022-07-14</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/hexoblog.github.io/categories/git/" itemprop="url" rel="index"><span itemprop="name">git</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="git上传步骤：-仅第一次上传可参考"><a href="#git上传步骤：-仅第一次上传可参考" class="headerlink" title="#git上传步骤：(仅第一次上传可参考)"></a>#git上传步骤：(仅第一次上传可参考)</h1><h4 id="01-登录github账号，新建仓库-gt"><a href="#01-登录github账号，新建仓库-gt" class="headerlink" title="01 登录github账号，新建仓库&gt;"></a>01 登录github账号，新建仓库&gt;</h4><span id="more"></span>
+<h4 id="02-无错误然后-使用git-bash打开本地项目的文件夹，然后执行："><a href="#02-无错误然后-使用git-bash打开本地项目的文件夹，然后执行：" class="headerlink" title="02 无错误然后 使用git bash打开本地项目的文件夹，然后执行："></a>02 无错误然后 使用git bash打开本地项目的文件夹，然后执行：</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git init</span><br></pre></td></tr></table></figure>
+<p>(初始化git)</p>
+<h4 id="03-无错误然后-复制新建仓库的SSH地址，继续执行"><a href="#03-无错误然后-复制新建仓库的SSH地址，继续执行" class="headerlink" title="03 无错误然后 复制新建仓库的SSH地址，继续执行:"></a>03 无错误然后 复制新建仓库的SSH地址，继续执行:</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git remote add origin SSH地址(粘贴)</span><br></pre></td></tr></table></figure>
+<p>(SSH地址为所提交的仓库地址)</p>
+<h4 id="04-无错误然后-继续执行"><a href="#04-无错误然后-继续执行" class="headerlink" title="04 无错误然后 继续执行:"></a>04 无错误然后 继续执行:</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git add .</span><br></pre></td></tr></table></figure>
+<p>(“.”代表所有 可用文件名代替”.” 来上传某个文件)<br>(这是添加要提交的本地项目)</p>
+<h4 id="05-无错误然后-继续执行"><a href="#05-无错误然后-继续执行" class="headerlink" title="05 无错误然后 继续执行:"></a>05 无错误然后 继续执行:</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git commit -m &quot;描述&quot;</span><br></pre></td></tr></table></figure>
+<p>(提交到本地库)</p>
+<h4 id="06-无错误然后-继续执行"><a href="#06-无错误然后-继续执行" class="headerlink" title="06 无错误然后 继续执行:"></a>06 无错误然后 继续执行:</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git push -u origin master</span><br></pre></td></tr></table></figure>
+<p>(将该项目推送到gitlab端)</p>
+<h3 id="注-推送命令发出后，若出现：-failed-to-push-some-refs-to-git-错误，主要原因是github中的README-md文件不在本地代码目录中，因此，可通过如下命令进行代码合并（pull-x3D-fetch-merge）"><a href="#注-推送命令发出后，若出现：-failed-to-push-some-refs-to-git-错误，主要原因是github中的README-md文件不在本地代码目录中，因此，可通过如下命令进行代码合并（pull-x3D-fetch-merge）" class="headerlink" title="#注:推送命令发出后，若出现：  failed to push some refs to git 错误，主要原因是github中的README.md文件不在本地代码目录中，因此，可通过如下命令进行代码合并（pull&#x3D;fetch+merge）:"></a>#注:推送命令发出后，若出现：  failed to push some refs to git 错误，主要原因是github中的README.md文件不在本地代码目录中，因此，可通过如下命令进行代码合并（pull&#x3D;fetch+merge）:</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">it pull --rebase origin master</span><br></pre></td></tr></table></figure>
+
+<h3 id="执行完此代码后可以看到本地代码库多了README-MD文件，此时，再执行语句："><a href="#执行完此代码后可以看到本地代码库多了README-MD文件，此时，再执行语句：" class="headerlink" title="#执行完此代码后可以看到本地代码库多了README.MD文件，此时，再执行语句："></a>#执行完此代码后可以看到本地代码库多了README.MD文件，此时，再执行语句：</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git push -u origin master </span><br></pre></td></tr></table></figure>
+<p>(这是下拉命令)</p>
+<h1 id="git更新或者在同一个仓库上传新内容–步骤："><a href="#git更新或者在同一个仓库上传新内容–步骤：" class="headerlink" title="#git更新或者在同一个仓库上传新内容–步骤："></a>#git更新或者在同一个仓库上传新内容–步骤：</h1><h1 id="先把仓库里的所有东西pulld下拉下来-git-add-（或者某个新文件的名字）-–-gt-git-commit-m"><a href="#先把仓库里的所有东西pulld下拉下来-git-add-（或者某个新文件的名字）-–-gt-git-commit-m" class="headerlink" title="先把仓库里的所有东西pulld下拉下来(git add .（或者某个新文件的名字） –&gt; git commit -m)"></a>先把仓库里的所有东西pulld下拉下来(git add .（或者某个新文件的名字） –&gt; git commit -m)</h1><h1 id="然后再push上传-git-push-u-origin-master"><a href="#然后再push上传-git-push-u-origin-master" class="headerlink" title="然后再push上传(git push -u origin master)"></a>然后再push上传(git push -u origin master)</h1><h1 id="更新"><a href="#更新" class="headerlink" title="更新:"></a>更新:</h1><img src="/hexoblog.github.io/2022/07/07/git%E7%AF%87-%E4%B8%8A%E4%BC%A0%E4%BB%A5%E5%8F%8A%E6%9B%B4%E6%96%B0/%E6%9B%B4%E6%96%B0.png" class title="This is an update image">
+<h3 id><a href="#" class="headerlink" title></a></h3><h1 id="如果出现端口拒绝，类似：”ssh-connect-to-host-github-com-port-22-Connection-refused”-可以尝试关闭加速器-vpn-然后再试试"><a href="#如果出现端口拒绝，类似：”ssh-connect-to-host-github-com-port-22-Connection-refused”-可以尝试关闭加速器-vpn-然后再试试" class="headerlink" title="如果出现端口拒绝，类似：”ssh: connect to host github.com port 22: Connection refused”,可以尝试关闭加速器(vpn),然后再试试"></a>如果出现端口拒绝，类似：”ssh: connect to host github.com port 22: Connection refused”,可以尝试关闭加速器(vpn),然后再试试</h1>
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div>坚持原创技术分享，您的支持将鼓励我继续创作.</div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/hexoblog.github.io/images/wechatpay.png" alt="Cofeesy 微信支付">
+        <p>微信支付</p>
+      </div>
+      
+      <div style="display: inline-block;">
+        <img src="/hexoblog.github.io/images/alipay.png" alt="Cofeesy 支付宝">
+        <p>支付宝</p>
+      </div>
+
+  </div>
+</div>
+
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/hexoblog.github.io/2022/07/05/Go%E8%AF%AD%E8%A8%80%E5%9F%BA%E7%A1%80-%E6%9F%A5%E6%BC%8F%E8%A1%A5%E7%BC%BA/" rel="prev" title="Go语言基础--查漏补缺">
+      <i class="fa fa-chevron-left"></i> Go语言基础--查漏补缺
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/hexoblog.github.io/2022/07/09/%E9%A1%B9%E7%9B%AE%E4%B8%AD%E7%9A%84%E4%B8%9A%E5%8A%A1%E5%A4%84%E7%90%86-%E8%BD%AF%E5%88%A0%E9%99%A4%E5%92%8C%E7%A1%AC%E5%88%A0%E9%99%A4/" rel="next" title="项目中的业务处理--软删除和硬删除">
+      项目中的业务处理--软删除和硬删除 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#git%E4%B8%8A%E4%BC%A0%E6%AD%A5%E9%AA%A4%EF%BC%9A-%E4%BB%85%E7%AC%AC%E4%B8%80%E6%AC%A1%E4%B8%8A%E4%BC%A0%E5%8F%AF%E5%8F%82%E8%80%83"><span class="nav-number">1.</span> <span class="nav-text">#git上传步骤：(仅第一次上传可参考)</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#01-%E7%99%BB%E5%BD%95github%E8%B4%A6%E5%8F%B7%EF%BC%8C%E6%96%B0%E5%BB%BA%E4%BB%93%E5%BA%93-gt"><span class="nav-number">1.0.0.1.</span> <span class="nav-text">01 登录github账号，新建仓库&gt;</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#02-%E6%97%A0%E9%94%99%E8%AF%AF%E7%84%B6%E5%90%8E-%E4%BD%BF%E7%94%A8git-bash%E6%89%93%E5%BC%80%E6%9C%AC%E5%9C%B0%E9%A1%B9%E7%9B%AE%E7%9A%84%E6%96%87%E4%BB%B6%E5%A4%B9%EF%BC%8C%E7%84%B6%E5%90%8E%E6%89%A7%E8%A1%8C%EF%BC%9A"><span class="nav-number">1.0.0.2.</span> <span class="nav-text">02 无错误然后 使用git bash打开本地项目的文件夹，然后执行：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#03-%E6%97%A0%E9%94%99%E8%AF%AF%E7%84%B6%E5%90%8E-%E5%A4%8D%E5%88%B6%E6%96%B0%E5%BB%BA%E4%BB%93%E5%BA%93%E7%9A%84SSH%E5%9C%B0%E5%9D%80%EF%BC%8C%E7%BB%A7%E7%BB%AD%E6%89%A7%E8%A1%8C"><span class="nav-number">1.0.0.3.</span> <span class="nav-text">03 无错误然后 复制新建仓库的SSH地址，继续执行:</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#04-%E6%97%A0%E9%94%99%E8%AF%AF%E7%84%B6%E5%90%8E-%E7%BB%A7%E7%BB%AD%E6%89%A7%E8%A1%8C"><span class="nav-number">1.0.0.4.</span> <span class="nav-text">04 无错误然后 继续执行:</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#05-%E6%97%A0%E9%94%99%E8%AF%AF%E7%84%B6%E5%90%8E-%E7%BB%A7%E7%BB%AD%E6%89%A7%E8%A1%8C"><span class="nav-number">1.0.0.5.</span> <span class="nav-text">05 无错误然后 继续执行:</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#06-%E6%97%A0%E9%94%99%E8%AF%AF%E7%84%B6%E5%90%8E-%E7%BB%A7%E7%BB%AD%E6%89%A7%E8%A1%8C"><span class="nav-number">1.0.0.6.</span> <span class="nav-text">06 无错误然后 继续执行:</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B3%A8-%E6%8E%A8%E9%80%81%E5%91%BD%E4%BB%A4%E5%8F%91%E5%87%BA%E5%90%8E%EF%BC%8C%E8%8B%A5%E5%87%BA%E7%8E%B0%EF%BC%9A-failed-to-push-some-refs-to-git-%E9%94%99%E8%AF%AF%EF%BC%8C%E4%B8%BB%E8%A6%81%E5%8E%9F%E5%9B%A0%E6%98%AFgithub%E4%B8%AD%E7%9A%84README-md%E6%96%87%E4%BB%B6%E4%B8%8D%E5%9C%A8%E6%9C%AC%E5%9C%B0%E4%BB%A3%E7%A0%81%E7%9B%AE%E5%BD%95%E4%B8%AD%EF%BC%8C%E5%9B%A0%E6%AD%A4%EF%BC%8C%E5%8F%AF%E9%80%9A%E8%BF%87%E5%A6%82%E4%B8%8B%E5%91%BD%E4%BB%A4%E8%BF%9B%E8%A1%8C%E4%BB%A3%E7%A0%81%E5%90%88%E5%B9%B6%EF%BC%88pull-x3D-fetch-merge%EF%BC%89"><span class="nav-number">1.0.1.</span> <span class="nav-text">#注:推送命令发出后，若出现：  failed to push some refs to git 错误，主要原因是github中的README.md文件不在本地代码目录中，因此，可通过如下命令进行代码合并（pull&#x3D;fetch+merge）:</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%89%A7%E8%A1%8C%E5%AE%8C%E6%AD%A4%E4%BB%A3%E7%A0%81%E5%90%8E%E5%8F%AF%E4%BB%A5%E7%9C%8B%E5%88%B0%E6%9C%AC%E5%9C%B0%E4%BB%A3%E7%A0%81%E5%BA%93%E5%A4%9A%E4%BA%86README-MD%E6%96%87%E4%BB%B6%EF%BC%8C%E6%AD%A4%E6%97%B6%EF%BC%8C%E5%86%8D%E6%89%A7%E8%A1%8C%E8%AF%AD%E5%8F%A5%EF%BC%9A"><span class="nav-number">1.0.2.</span> <span class="nav-text">#执行完此代码后可以看到本地代码库多了README.MD文件，此时，再执行语句：</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#git%E6%9B%B4%E6%96%B0%E6%88%96%E8%80%85%E5%9C%A8%E5%90%8C%E4%B8%80%E4%B8%AA%E4%BB%93%E5%BA%93%E4%B8%8A%E4%BC%A0%E6%96%B0%E5%86%85%E5%AE%B9%E2%80%93%E6%AD%A5%E9%AA%A4%EF%BC%9A"><span class="nav-number">2.</span> <span class="nav-text">#git更新或者在同一个仓库上传新内容–步骤：</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%85%88%E6%8A%8A%E4%BB%93%E5%BA%93%E9%87%8C%E7%9A%84%E6%89%80%E6%9C%89%E4%B8%9C%E8%A5%BFpulld%E4%B8%8B%E6%8B%89%E4%B8%8B%E6%9D%A5-git-add-%EF%BC%88%E6%88%96%E8%80%85%E6%9F%90%E4%B8%AA%E6%96%B0%E6%96%87%E4%BB%B6%E7%9A%84%E5%90%8D%E5%AD%97%EF%BC%89-%E2%80%93-gt-git-commit-m"><span class="nav-number">3.</span> <span class="nav-text">先把仓库里的所有东西pulld下拉下来(git add .（或者某个新文件的名字） –&gt; git commit -m)</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%84%B6%E5%90%8E%E5%86%8Dpush%E4%B8%8A%E4%BC%A0-git-push-u-origin-master"><span class="nav-number">4.</span> <span class="nav-text">然后再push上传(git push -u origin master)</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%9B%B4%E6%96%B0"><span class="nav-number">5.</span> <span class="nav-text">更新:</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">5.0.1.</span> <span class="nav-text"></span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%A6%82%E6%9E%9C%E5%87%BA%E7%8E%B0%E7%AB%AF%E5%8F%A3%E6%8B%92%E7%BB%9D%EF%BC%8C%E7%B1%BB%E4%BC%BC%EF%BC%9A%E2%80%9Dssh-connect-to-host-github-com-port-22-Connection-refused%E2%80%9D-%E5%8F%AF%E4%BB%A5%E5%B0%9D%E8%AF%95%E5%85%B3%E9%97%AD%E5%8A%A0%E9%80%9F%E5%99%A8-vpn-%E7%84%B6%E5%90%8E%E5%86%8D%E8%AF%95%E8%AF%95"><span class="nav-number">6.</span> <span class="nav-text">如果出现端口拒绝，类似：”ssh: connect to host github.com port 22: Connection refused”,可以尝试关闭加速器(vpn),然后再试试</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Cofeesy</p>
+  <div class="site-description" itemprop="description">凡是过往，皆为序章</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/hexoblog.github.io/archives/">
+        
+          <span class="site-state-item-count">19</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/hexoblog.github.io/categories/">
+          
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/hexoblog.github.io/tags/">
+          
+        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Cofeesy" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;Cofeesy" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/Cofeesy_zzz" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;Cofeesy_zzz" rel="noopener" target="_blank"><i class="fab fa-twitter fa-fw"></i>Twitter</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Cofeesy</span>
+</div>
+
+<!--
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+-->
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/hexoblog.github.io/lib/anime.min.js"></script>
+  <script src="/hexoblog.github.io/lib/velocity/velocity.min.js"></script>
+  <script src="/hexoblog.github.io/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/hexoblog.github.io/js/utils.js"></script>
+
+<script src="/hexoblog.github.io/js/motion.js"></script>
+
+
+<script src="/hexoblog.github.io/js/schemes/muse.js"></script>
+
+
+<script src="/hexoblog.github.io/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/hexoblog.github.io/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+
+  
+  <script type="text/javascript" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+  
+
+</body>
+</html>
