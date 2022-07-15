@@ -8,9 +8,15 @@
       <link href="/hexoblog.github.io/2022/07/14/docker%E4%B9%8B%E9%83%A8%E7%BD%B2%E6%88%91%E7%9A%84%E7%AC%AC%E4%B8%80%E4%B8%AAgoland%E9%A1%B9%E7%9B%AE/"/>
       <url>/hexoblog.github.io/2022/07/14/docker%E4%B9%8B%E9%83%A8%E7%BD%B2%E6%88%91%E7%9A%84%E7%AC%AC%E4%B8%80%E4%B8%AAgoland%E9%A1%B9%E7%9B%AE/</url>
       
-        <content type="html"><![CDATA[]]></content>
+        <content type="html"><![CDATA[<h1 id="失败"><a href="#失败" class="headerlink" title="失败"></a><strong>失败</strong></h1><hr><h1 id="具体失败过程（算了当日记写了）：开始想着goland有相关插件，网上搜搜知识下载好docker就可以部署了，但是这第一步就出现在这个下载安装问题上，其实下载安装到没什么问题，就是docker如果在windows运行的话需要Hyper-V虚拟机启用，我的电脑上没有显示，于是我去官网上准备下，但是官网说明到他和VMware工具是相排斥的，我索性使用VMware在linux上部署；但是问题来了，我得在linux上下载好docker，然后配置好Goland，还需要redis等的配置，到mysql配置时就出了很多问题，网上安装mysql的文章在我的linux平台上弄起来总是有些小毛病，于是前前后后回滚了好多次安装过程，让我崩溃的就是刚刚最后一次回滚的时候又误将系统yum文件删除，此时已经过去4个小时，网上又是一堆yum文件误删找回来的教学，ok，暂时与docker无缘……"><a href="#具体失败过程（算了当日记写了）：开始想着goland有相关插件，网上搜搜知识下载好docker就可以部署了，但是这第一步就出现在这个下载安装问题上，其实下载安装到没什么问题，就是docker如果在windows运行的话需要Hyper-V虚拟机启用，我的电脑上没有显示，于是我去官网上准备下，但是官网说明到他和VMware工具是相排斥的，我索性使用VMware在linux上部署；但是问题来了，我得在linux上下载好docker，然后配置好Goland，还需要redis等的配置，到mysql配置时就出了很多问题，网上安装mysql的文章在我的linux平台上弄起来总是有些小毛病，于是前前后后回滚了好多次安装过程，让我崩溃的就是刚刚最后一次回滚的时候又误将系统yum文件删除，此时已经过去4个小时，网上又是一堆yum文件误删找回来的教学，ok，暂时与docker无缘……" class="headerlink" title="具体失败过程（算了当日记写了）：开始想着goland有相关插件，网上搜搜知识下载好docker就可以部署了，但是这第一步就出现在这个下载安装问题上，其实下载安装到没什么问题，就是docker如果在windows运行的话需要Hyper-V虚拟机启用，我的电脑上没有显示，于是我去官网上准备下，但是官网说明到他和VMware工具是相排斥的，我索性使用VMware在linux上部署；但是问题来了，我得在linux上下载好docker，然后配置好Goland，还需要redis等的配置，到mysql配置时就出了很多问题，网上安装mysql的文章在我的linux平台上弄起来总是有些小毛病，于是前前后后回滚了好多次安装过程，让我崩溃的就是刚刚最后一次回滚的时候又误将系统yum文件删除，此时已经过去4个小时，网上又是一堆yum文件误删找回来的教学，ok，暂时与docker无缘……"></a>具体失败过程（算了当日记写了）：开始想着goland有相关插件，网上搜搜知识下载好docker就可以部署了，但是这第一步就出现在这个下载安装问题上，其实下载安装到没什么问题，就是docker如果在windows运行的话需要Hyper-V虚拟机启用，我的电脑上没有显示，于是我去官网上准备下，但是官网说明到他和VMware工具是相排斥的，我索性使用VMware在linux上部署；但是问题来了，我得在linux上下载好docker，然后配置好Goland，还需要redis等的配置，到mysql配置时就出了很多问题，网上安装mysql的文章在我的linux平台上弄起来总是有些小毛病，于是前前后后回滚了好多次安装过程，让我崩溃的就是刚刚最后一次回滚的时候又误将系统yum文件删除，此时已经过去4个小时，网上又是一堆yum文件误删找回来的教学，ok，暂时与docker无缘……</h1>]]></content>
       
       
+      
+        <tags>
+            
+            <tag> 部署失败 </tag>
+            
+        </tags>
       
     </entry>
     
