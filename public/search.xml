@@ -4,6 +4,31 @@
   
     
     <entry>
+      <title>简易的比特币-区块链原型</title>
+      <link href="/hexoblog.github.io/2022/08/21/%E7%AE%80%E6%98%93%E7%9A%84%E6%AF%94%E7%89%B9%E5%B8%81-%E5%8C%BA%E5%9D%97%E9%93%BE%E5%8E%9F%E5%9E%8B/"/>
+      <url>/hexoblog.github.io/2022/08/21/%E7%AE%80%E6%98%93%E7%9A%84%E6%AF%94%E7%89%B9%E5%B8%81-%E5%8C%BA%E5%9D%97%E9%93%BE%E5%8E%9F%E5%9E%8B/</url>
+      
+        <content type="html"><![CDATA[<h1 id="Go语言实现-github地址"><a href="#Go语言实现-github地址" class="headerlink" title="Go语言实现,github地址:"></a>Go语言实现,github地址:</h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://github.com/Cofeesy/SimpleBitcoin-blockchainPrototype.git</span><br></pre></td></tr></table></figure>]]></content>
+      
+      
+      <categories>
+          
+          <category> 区块链 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Go </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>Goland文件数据库-Bolt库简单操作</title>
       <link href="/hexoblog.github.io/2022/08/20/Goland%E6%96%87%E4%BB%B6%E6%95%B0%E6%8D%AE%E5%BA%93-Bolt%E5%BA%93%E7%AE%80%E5%8D%95%E6%93%8D%E4%BD%9C/"/>
       <url>/hexoblog.github.io/2022/08/20/Goland%E6%96%87%E4%BB%B6%E6%95%B0%E6%8D%AE%E5%BA%93-Bolt%E5%BA%93%E7%AE%80%E5%8D%95%E6%93%8D%E4%BD%9C/</url>
@@ -20,7 +45,7 @@
       
         <tags>
             
-            <tag> go </tag>
+            <tag> Go </tag>
             
         </tags>
       
@@ -102,7 +127,7 @@
       
         <tags>
             
-            <tag> bug </tag>
+            <tag> bug Go </tag>
             
         </tags>
       
@@ -296,7 +321,7 @@
       
         <tags>
             
-            <tag> ·Go </tag>
+            <tag> Go </tag>
             
         </tags>
       
@@ -384,7 +409,7 @@
       
         <tags>
             
-            <tag> ·Go </tag>
+            <tag> Go </tag>
             
         </tags>
       
