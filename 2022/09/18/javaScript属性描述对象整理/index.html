@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/hexoblog.github.io/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/hexoblog.github.io/images/favicon-32x32-next.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/hexoblog.github.io/images/favicon-16x16-next.ico">
+  <link rel="mask-icon" href="/hexoblog.github.io/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/hexoblog.github.io/css/main.css">
+
+
+<link rel="stylesheet" href="/hexoblog.github.io/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="/hexoblog.github.io/lib/pace/pace-theme-minimal.min.css">
+  <script src="/hexoblog.github.io/lib/pace/pace.min.js"></script>
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"cofeesy.github.io","root":"/hexoblog.github.io/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"./public/search.xml"};
+  </script>
+
+  <meta name="description" content="概述以及定义：JavaScript 提供了一个内部数据结构，用来描述对象的属性，控制它的行为，比如该属性是否可写、可遍历等等。这个内部数据结构称为“属性描述对象”（attributes object）。每个属性都有自己对应的属性描述对象，保存该属性的一些元信息。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="javaScript属性描述对象整理">
+<meta property="og:url" content="https://cofeesy.github.io/hexoblog.github.io/2022/09/18/javaScript%E5%B1%9E%E6%80%A7%E6%8F%8F%E8%BF%B0%E5%AF%B9%E8%B1%A1%E6%95%B4%E7%90%86/index.html">
+<meta property="og:site_name" content="Cofeesy的博客">
+<meta property="og:description" content="概述以及定义：JavaScript 提供了一个内部数据结构，用来描述对象的属性，控制它的行为，比如该属性是否可写、可遍历等等。这个内部数据结构称为“属性描述对象”（attributes object）。每个属性都有自己对应的属性描述对象，保存该属性的一些元信息。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-09-18T04:47:30.000Z">
+<meta property="article:modified_time" content="2022-09-18T13:54:09.228Z">
+<meta property="article:author" content="Cofeesy">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://cofeesy.github.io/hexoblog.github.io/2022/09/18/javaScript%E5%B1%9E%E6%80%A7%E6%8F%8F%E8%BF%B0%E5%AF%B9%E8%B1%A1%E6%95%B4%E7%90%86/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>javaScript属性描述对象整理 | Cofeesy的博客</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/hexoblog.github.io/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Cofeesy的博客</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">理想深度 现实情怀</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/hexoblog.github.io/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/hexoblog.github.io/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/hexoblog.github.io/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/hexoblog.github.io/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://cofeesy.github.io/hexoblog.github.io/2022/09/18/javaScript%E5%B1%9E%E6%80%A7%E6%8F%8F%E8%BF%B0%E5%AF%B9%E8%B1%A1%E6%95%B4%E7%90%86/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/hexoblog.github.io/images/avatar.gif">
+      <meta itemprop="name" content="Cofeesy">
+      <meta itemprop="description" content="凡是过往，皆为序章">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Cofeesy的博客">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          javaScript属性描述对象整理
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-09-18 12:47:30 / 修改时间：21:54:09" itemprop="dateCreated datePublished" datetime="2022-09-18T12:47:30+08:00">2022-09-18</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/hexoblog.github.io/categories/JavaScript/" itemprop="url" rel="index"><span itemprop="name">JavaScript</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="概述以及定义：JavaScript-提供了一个内部数据结构，用来描述对象的属性，控制它的行为，比如该属性是否可写、可遍历等等。这个内部数据结构称为“属性描述对象”（attributes-object）。每个属性都有自己对应的属性描述对象，保存该属性的一些元信息。"><a href="#概述以及定义：JavaScript-提供了一个内部数据结构，用来描述对象的属性，控制它的行为，比如该属性是否可写、可遍历等等。这个内部数据结构称为“属性描述对象”（attributes-object）。每个属性都有自己对应的属性描述对象，保存该属性的一些元信息。" class="headerlink" title="概述以及定义：JavaScript 提供了一个内部数据结构，用来描述对象的属性，控制它的行为，比如该属性是否可写、可遍历等等。这个内部数据结构称为“属性描述对象”（attributes object）。每个属性都有自己对应的属性描述对象，保存该属性的一些元信息。"></a>概述以及定义：JavaScript 提供了一个内部数据结构，用来描述对象的属性，控制它的行为，比如该属性是否可写、可遍历等等。这个内部数据结构称为“属性描述对象”（attributes object）。每个属性都有自己对应的属性描述对象，保存该属性的一些元信息。</h1><span id="more"></span>
+
+<h3 id="属性描述对象有以下六个元属性-一个代码块-来描述对象的属性"><a href="#属性描述对象有以下六个元属性-一个代码块-来描述对象的属性" class="headerlink" title="属性描述对象有以下六个元属性(一个代码块)来描述对象的属性:"></a>属性描述对象有以下六个元属性(一个代码块)来描述对象的属性:</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    value: 123,</span><br><span class="line">    writable:fasel,</span><br><span class="line">    enumerable: true,</span><br><span class="line">    configurable: false,</span><br><span class="line">    get: undefined,</span><br><span class="line">    set: undefined</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="修改属性描述符"><a href="#修改属性描述符" class="headerlink" title="修改属性描述符"></a>修改属性描述符</h1><h3 id="（1）value-该属性的属性值"><a href="#（1）value-该属性的属性值" class="headerlink" title="（1）value:该属性的属性值"></a>（1）<code>value</code>:该属性的属性值</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">var obj = &#123;&#125;//声明一个空对象</span><br><span class="line">obj.p = 123;//声明obj的一个属性p</span><br><span class="line"></span><br><span class="line">Object.getOwnPropertyDescriptor(obj, &#x27;p&#x27;).value;//通过Object.getOwnPropertyDescriptor()函数获取</span><br><span class="line">//123</span><br><span class="line"></span><br><span class="line">Object.defineProperty(obj,&#x27;p&#x27;,&#123;value:456&#125;);//通过Object.defineProperty()对属性value进行修改</span><br><span class="line">//456</span><br></pre></td></tr></table></figure>
+
+<h3 id="（2）writable：布尔值，决定该属性是否可改变，默认true"><a href="#（2）writable：布尔值，决定该属性是否可改变，默认true" class="headerlink" title="（2）writable：布尔值，决定该属性是否可改变，默认true"></a>（2）<code>writable</code>：布尔值，决定该属性是否可改变，默认true</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">var obj = &#123;&#125;;</span><br><span class="line"></span><br><span class="line">Object.defineProperty(obj,&#x27;a&#x27;,&#123;</span><br><span class="line">    value: 37,</span><br><span class="line">    writable: false,//修改该属性对象描述中的writable为不可修改</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">obj.a//37</span><br><span class="line">obj.a = 23;</span><br><span class="line">//1.正常模式下上一行代码修改对象属性描述对象的writable值为false的操作不会报错，但是严格模式下任何赋值行为都会报错</span><br><span class="line">//2.接第一点如果，因为子对象继承该父对象，子对象将无法自定义这个属性，也就是说，在严格模式下，父对象定义好了writable的值而子对象修改writable的值会报错</span><br><span class="line">//3.接上面两点，有一个规避方法，就是通过覆盖属性描述对象</span><br><span class="line"></span><br><span class="line">obj.a//无法被修改，所以仍然为37</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="（3）enumerable-布尔值，表示该属性是否可遍历，默认为true"><a href="#（3）enumerable-布尔值，表示该属性是否可遍历，默认为true" class="headerlink" title="（3）enumerable:布尔值，表示该属性是否可遍历，默认为true"></a>（3）<code>enumerable</code>:布尔值，表示该属性是否可遍历，默认为true</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">var obj = &#123;&#125;;</span><br><span class="line"></span><br><span class="line">Object.defineProperty(obj, &#x27;x&#x27;, &#123;</span><br><span class="line">  value: 123,</span><br><span class="line">  enumerable: false</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">obj.x // 123</span><br><span class="line"></span><br><span class="line">for (var key in obj) &#123;</span><br><span class="line">  console.log(key);</span><br><span class="line">&#125;</span><br><span class="line">// undefined </span><br><span class="line"></span><br><span class="line">//enumerable为false，下面三个操作不会取到该属性。</span><br><span class="line"></span><br><span class="line">for..in循环(for...in循环包括继承的属性)</span><br><span class="line">Object.keys方法(Object.keys方法不包括继承的属性)</span><br><span class="line">JSON.stringify方法</span><br></pre></td></tr></table></figure>
+
+<h3 id="（4）configurable-布尔值，表示该属性是否可遍历，默认为true-设置为false会使得某些操作-for-in…或者Object-keys-跳过该属性"><a href="#（4）configurable-布尔值，表示该属性是否可遍历，默认为true-设置为false会使得某些操作-for-in…或者Object-keys-跳过该属性" class="headerlink" title="（4）configurable:布尔值，表示该属性是否可遍历，默认为true,设置为false会使得某些操作(for..in…或者Object.keys())跳过该属性"></a>（4）<code>configurable</code>:布尔值，表示该属性是否可遍历，默认为true,设置为false会使得某些操作(for..in…或者Object.keys())跳过该属性</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">//1.如果对象的属性描述对象中的configurable属性被设为了false值，那么相关的这个对象中的configurable为false时，writable、enumerable和configurable都不能被修改了。(浅不变性)</span><br><span class="line"></span><br><span class="line">//2.value属性的情况比较特殊。只要writable和configurable有一个为true，就允许改动value</span><br><span class="line"></span><br><span class="line">var obj = Object.defineProperty(&#123;&#125;, &#x27;p&#x27;, &#123;</span><br><span class="line">  value: 1,</span><br><span class="line">  writable: false,</span><br><span class="line">  enumerable: false,</span><br><span class="line">  configurable: false</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">Object.defineProperty(obj, &#x27;p&#x27;, &#123;writable: true&#125;)</span><br><span class="line">// TypeError: Cannot redefine property: p</span><br><span class="line">//3.writable属性只有在false改为true时会报错，true改为false是允许的。</span><br><span class="line"></span><br><span class="line">Object.defineProperty(obj, &#x27;p&#x27;, &#123;enumerable: true&#125;)</span><br><span class="line">// TypeError: Cannot redefine property: p</span><br><span class="line"></span><br><span class="line">Object.defineProperty(obj, &#x27;p&#x27;, &#123;configurable: true&#125;)</span><br><span class="line">// TypeError: Cannot redefine property: p</span><br><span class="line"></span><br><span class="line">Object.defineProperty(obj, &#x27;p&#x27;, &#123;value: 2&#125;)</span><br><span class="line">// TypeError: Cannot redefine property: p</span><br><span class="line"></span><br><span class="line">//4.并且可配置性决定了目标属性是否可以被删除（delete），configurable是true，就可以被删除，否则就不行</span><br></pre></td></tr></table></figure>
+
+<h3 id="对象常量"><a href="#对象常量" class="headerlink" title="对象常量"></a>对象常量</h3><p>也就是说，上面&#x2F;&#x2F;1.的<code>obj.p</code>属性设置成<code>writable:false,configurable:false</code>后，这个对象的这个属性就变成了常量，不可修改，不可删除，不可定义</p>
+<h3 id="（5）存取器：get-是一个函数，表示该属性的取值函数-getter-，默认为undefined"><a href="#（5）存取器：get-是一个函数，表示该属性的取值函数-getter-，默认为undefined" class="headerlink" title="（5）存取器：get:是一个函数，表示该属性的取值函数(getter)，默认为undefined"></a>（5）存取器：<code>get</code>:是一个函数，表示该属性的取值函数(getter)，默认为undefined</h3><h3 id="set-是一个函数，表示该函数的存值函数-setter-默认为undefined"><a href="#set-是一个函数，表示该函数的存值函数-setter-默认为undefined" class="headerlink" title="set:是一个函数，表示该函数的存值函数(setter),默认为undefined"></a><code>set</code>:是一个函数，表示该函数的存值函数(setter),默认为undefined</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">var obj = Object.defineProperty(&#123;&#125;, &#x27;p&#x27;, &#123;</span><br><span class="line">  get: function () &#123;</span><br><span class="line">    return &#x27;getter&#x27;;</span><br><span class="line">  &#125;,</span><br><span class="line">  set: function (value) &#123;</span><br><span class="line">    console.log(&#x27;setter: &#x27; + value);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">//1.或者</span><br><span class="line">var obj = &#123;</span><br><span class="line">    get p() &#123;</span><br><span class="line">        return &#x27;getter&#x27;;</span><br><span class="line">    &#125;,</span><br><span class="line">    set p(value) &#123;</span><br><span class="line">        console.log(&#x27;setter:&#x27; + value);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line">2.两种写法区别：第一种写法，属性p的configurable和enumerable都为false，从而导致属性p是不可遍历的；第二种写法，属性p的configurable和enumerable都为true，因此属性p是可遍历的</span><br><span class="line"></span><br><span class="line">3.实际开发中，第二种方法更加常用</span><br><span class="line"></span><br><span class="line">4.注意，取值函数get不能接受参数，存值函数set只能接受一个参数（即属性的值）</span><br><span class="line"></span><br><span class="line">obj.p // &quot;getter&quot;</span><br><span class="line">obj.p = 123 // &quot;setter: 123&quot;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+<h3 id="禁止扩展"><a href="#禁止扩展" class="headerlink" title="禁止扩展"></a>禁止扩展</h3><p>如果我们不想这个对象添加更多的属性，那么可以使用Object.preventExtensions()方法禁止扩展 </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">var obj=&#123;a:2&#125;;</span><br><span class="line">Object.preventExtensions(obj);</span><br><span class="line">obj.b = 2;</span><br><span class="line">obj //&#123;a:2&#125;,已经无法添加新属了</span><br></pre></td></tr></table></figure>
+
+<h3 id="密封"><a href="#密封" class="headerlink" title="密封"></a>密封</h3><p>密封就是禁止扩展的升级版,Object.seal()方法使得一个对象既无法添加新属性，也无法删除旧属性：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">var obj = &#123; p: &#x27;hello&#x27; &#125;;</span><br><span class="line">Object.seal(obj);</span><br><span class="line"></span><br><span class="line">delete obj.p;</span><br><span class="line">obj.p // &quot;hello&quot;  --&gt;1.无法被删除--&gt;其实质：将该属性描述对象的configurable属性设为false</span><br><span class="line"></span><br><span class="line">obj.x = &#x27;world&#x27;;</span><br><span class="line">obj.x // undefined  --&gt;2.无法添加新属性</span><br></pre></td></tr></table></figure>
+
+<h3 id="冻结"><a href="#冻结" class="headerlink" title="冻结"></a>冻结</h3><p>冻结就是密封的升级版，Object.freeze方法可以使得一个对象无法添加新属性、无法删除旧属性、也无法改变属性的值，使得这个对象实际上变成了常量</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">var obj = &#123;</span><br><span class="line">  p: &#x27;hello&#x27;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">Object.freeze(obj);</span><br><span class="line"></span><br><span class="line">obj.p = &#x27;world&#x27;;</span><br><span class="line">obj.p // &quot;hello&quot; --&gt;1.修改无效--&gt;其实质：把所有属性的writable给关掉(false)</span><br><span class="line"></span><br><span class="line">obj.t = &#x27;hello&#x27;;</span><br><span class="line">obj.t // undefined --&gt;2.无法添加新属性</span><br><span class="line"></span><br><span class="line">delete obj.p // false</span><br><span class="line">obj.p // &quot;hello --&gt;3.无法删除属性</span><br></pre></td></tr></table></figure>
+
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div>坚持原创技术分享，您的支持将鼓励我继续创作.</div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/hexoblog.github.io/images/wechatpay.png" alt="Cofeesy 微信支付">
+        <p>微信支付</p>
+      </div>
+      
+      <div style="display: inline-block;">
+        <img src="/hexoblog.github.io/images/alipay.png" alt="Cofeesy 支付宝">
+        <p>支付宝</p>
+      </div>
+
+  </div>
+</div>
+
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/hexoblog.github.io/2022/09/16/solidaty%E4%B8%AD%E7%9A%84%E4%BF%AE%E9%A5%B0%E7%AC%A6/" rel="prev" title="solidaty中的修饰符">
+      <i class="fa fa-chevron-left"></i> solidaty中的修饰符
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%A6%82%E8%BF%B0%E4%BB%A5%E5%8F%8A%E5%AE%9A%E4%B9%89%EF%BC%9AJavaScript-%E6%8F%90%E4%BE%9B%E4%BA%86%E4%B8%80%E4%B8%AA%E5%86%85%E9%83%A8%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%EF%BC%8C%E7%94%A8%E6%9D%A5%E6%8F%8F%E8%BF%B0%E5%AF%B9%E8%B1%A1%E7%9A%84%E5%B1%9E%E6%80%A7%EF%BC%8C%E6%8E%A7%E5%88%B6%E5%AE%83%E7%9A%84%E8%A1%8C%E4%B8%BA%EF%BC%8C%E6%AF%94%E5%A6%82%E8%AF%A5%E5%B1%9E%E6%80%A7%E6%98%AF%E5%90%A6%E5%8F%AF%E5%86%99%E3%80%81%E5%8F%AF%E9%81%8D%E5%8E%86%E7%AD%89%E7%AD%89%E3%80%82%E8%BF%99%E4%B8%AA%E5%86%85%E9%83%A8%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E7%A7%B0%E4%B8%BA%E2%80%9C%E5%B1%9E%E6%80%A7%E6%8F%8F%E8%BF%B0%E5%AF%B9%E8%B1%A1%E2%80%9D%EF%BC%88attributes-object%EF%BC%89%E3%80%82%E6%AF%8F%E4%B8%AA%E5%B1%9E%E6%80%A7%E9%83%BD%E6%9C%89%E8%87%AA%E5%B7%B1%E5%AF%B9%E5%BA%94%E7%9A%84%E5%B1%9E%E6%80%A7%E6%8F%8F%E8%BF%B0%E5%AF%B9%E8%B1%A1%EF%BC%8C%E4%BF%9D%E5%AD%98%E8%AF%A5%E5%B1%9E%E6%80%A7%E7%9A%84%E4%B8%80%E4%BA%9B%E5%85%83%E4%BF%A1%E6%81%AF%E3%80%82"><span class="nav-number">1.</span> <span class="nav-text">概述以及定义：JavaScript 提供了一个内部数据结构，用来描述对象的属性，控制它的行为，比如该属性是否可写、可遍历等等。这个内部数据结构称为“属性描述对象”（attributes object）。每个属性都有自己对应的属性描述对象，保存该属性的一些元信息。</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B1%9E%E6%80%A7%E6%8F%8F%E8%BF%B0%E5%AF%B9%E8%B1%A1%E6%9C%89%E4%BB%A5%E4%B8%8B%E5%85%AD%E4%B8%AA%E5%85%83%E5%B1%9E%E6%80%A7-%E4%B8%80%E4%B8%AA%E4%BB%A3%E7%A0%81%E5%9D%97-%E6%9D%A5%E6%8F%8F%E8%BF%B0%E5%AF%B9%E8%B1%A1%E7%9A%84%E5%B1%9E%E6%80%A7"><span class="nav-number">1.0.1.</span> <span class="nav-text">属性描述对象有以下六个元属性(一个代码块)来描述对象的属性:</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BF%AE%E6%94%B9%E5%B1%9E%E6%80%A7%E6%8F%8F%E8%BF%B0%E7%AC%A6"><span class="nav-number">2.</span> <span class="nav-text">修改属性描述符</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%EF%BC%881%EF%BC%89value-%E8%AF%A5%E5%B1%9E%E6%80%A7%E7%9A%84%E5%B1%9E%E6%80%A7%E5%80%BC"><span class="nav-number">2.0.1.</span> <span class="nav-text">（1）value:该属性的属性值</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%EF%BC%882%EF%BC%89writable%EF%BC%9A%E5%B8%83%E5%B0%94%E5%80%BC%EF%BC%8C%E5%86%B3%E5%AE%9A%E8%AF%A5%E5%B1%9E%E6%80%A7%E6%98%AF%E5%90%A6%E5%8F%AF%E6%94%B9%E5%8F%98%EF%BC%8C%E9%BB%98%E8%AE%A4true"><span class="nav-number">2.0.2.</span> <span class="nav-text">（2）writable：布尔值，决定该属性是否可改变，默认true</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%EF%BC%883%EF%BC%89enumerable-%E5%B8%83%E5%B0%94%E5%80%BC%EF%BC%8C%E8%A1%A8%E7%A4%BA%E8%AF%A5%E5%B1%9E%E6%80%A7%E6%98%AF%E5%90%A6%E5%8F%AF%E9%81%8D%E5%8E%86%EF%BC%8C%E9%BB%98%E8%AE%A4%E4%B8%BAtrue"><span class="nav-number">2.0.3.</span> <span class="nav-text">（3）enumerable:布尔值，表示该属性是否可遍历，默认为true</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%EF%BC%884%EF%BC%89configurable-%E5%B8%83%E5%B0%94%E5%80%BC%EF%BC%8C%E8%A1%A8%E7%A4%BA%E8%AF%A5%E5%B1%9E%E6%80%A7%E6%98%AF%E5%90%A6%E5%8F%AF%E9%81%8D%E5%8E%86%EF%BC%8C%E9%BB%98%E8%AE%A4%E4%B8%BAtrue-%E8%AE%BE%E7%BD%AE%E4%B8%BAfalse%E4%BC%9A%E4%BD%BF%E5%BE%97%E6%9F%90%E4%BA%9B%E6%93%8D%E4%BD%9C-for-in%E2%80%A6%E6%88%96%E8%80%85Object-keys-%E8%B7%B3%E8%BF%87%E8%AF%A5%E5%B1%9E%E6%80%A7"><span class="nav-number">2.0.4.</span> <span class="nav-text">（4）configurable:布尔值，表示该属性是否可遍历，默认为true,设置为false会使得某些操作(for..in…或者Object.keys())跳过该属性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AF%B9%E8%B1%A1%E5%B8%B8%E9%87%8F"><span class="nav-number">2.0.5.</span> <span class="nav-text">对象常量</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%EF%BC%885%EF%BC%89%E5%AD%98%E5%8F%96%E5%99%A8%EF%BC%9Aget-%E6%98%AF%E4%B8%80%E4%B8%AA%E5%87%BD%E6%95%B0%EF%BC%8C%E8%A1%A8%E7%A4%BA%E8%AF%A5%E5%B1%9E%E6%80%A7%E7%9A%84%E5%8F%96%E5%80%BC%E5%87%BD%E6%95%B0-getter-%EF%BC%8C%E9%BB%98%E8%AE%A4%E4%B8%BAundefined"><span class="nav-number">2.0.6.</span> <span class="nav-text">（5）存取器：get:是一个函数，表示该属性的取值函数(getter)，默认为undefined</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#set-%E6%98%AF%E4%B8%80%E4%B8%AA%E5%87%BD%E6%95%B0%EF%BC%8C%E8%A1%A8%E7%A4%BA%E8%AF%A5%E5%87%BD%E6%95%B0%E7%9A%84%E5%AD%98%E5%80%BC%E5%87%BD%E6%95%B0-setter-%E9%BB%98%E8%AE%A4%E4%B8%BAundefined"><span class="nav-number">2.0.7.</span> <span class="nav-text">set:是一个函数，表示该函数的存值函数(setter),默认为undefined</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A6%81%E6%AD%A2%E6%89%A9%E5%B1%95"><span class="nav-number">2.0.8.</span> <span class="nav-text">禁止扩展</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AF%86%E5%B0%81"><span class="nav-number">2.0.9.</span> <span class="nav-text">密封</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%86%BB%E7%BB%93"><span class="nav-number">2.0.10.</span> <span class="nav-text">冻结</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Cofeesy"
+      src="/hexoblog.github.io/images/avatar.gif">
+  <p class="site-author-name" itemprop="name">Cofeesy</p>
+  <div class="site-description" itemprop="description">凡是过往，皆为序章</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/hexoblog.github.io/archives/">
+        
+          <span class="site-state-item-count">27</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/hexoblog.github.io/categories/">
+          
+        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/hexoblog.github.io/tags/">
+          
+        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Cofeesy" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;Cofeesy" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:2898939720@qq.com" title="E-Mail → mailto:2898939720@qq.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/Cofeesy_zzz" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;Cofeesy_zzz" rel="noopener" target="_blank"><i class="fab fa-twitter fa-fw"></i>Twitter</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Cofeesy</span>
+</div>
+
+<!--
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+-->
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/hexoblog.github.io/lib/anime.min.js"></script>
+  <script src="/hexoblog.github.io/lib/velocity/velocity.min.js"></script>
+  <script src="/hexoblog.github.io/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/hexoblog.github.io/js/utils.js"></script>
+
+<script src="/hexoblog.github.io/js/motion.js"></script>
+
+
+<script src="/hexoblog.github.io/js/schemes/muse.js"></script>
+
+
+<script src="/hexoblog.github.io/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/hexoblog.github.io/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+
+  
+  <script type="text/javascript" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+  
+
+</body>
+</html>
