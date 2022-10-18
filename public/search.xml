@@ -4,6 +4,19 @@
   
     
     <entry>
+      <title>大端小端理解学习</title>
+      <link href="/hexoblog.github.io/2022/10/18/%E5%A4%A7%E7%AB%AF%E5%B0%8F%E7%AB%AF%E7%90%86%E8%A7%A3%E5%AD%A6%E4%B9%A0/"/>
+      <url>/hexoblog.github.io/2022/10/18/%E5%A4%A7%E7%AB%AF%E5%B0%8F%E7%AB%AF%E7%90%86%E8%A7%A3%E5%AD%A6%E4%B9%A0/</url>
+      
+        <content type="html"><![CDATA[<h1 id="———————————————————————————"><a href="#———————————————————————————" class="headerlink" title="———————————————————————————"></a>———————————————————————————</h1><span id="more"></span><h1 id="1-概念："><a href="#1-概念：" class="headerlink" title="1.概念："></a>1.概念：</h1><h4 id="大端模式：高位字节排放在内存的低地址端，低位字节排放在内存的高地址端"><a href="#大端模式：高位字节排放在内存的低地址端，低位字节排放在内存的高地址端" class="headerlink" title="大端模式：高位字节排放在内存的低地址端，低位字节排放在内存的高地址端"></a>大端模式：高位字节排放在内存的低地址端，低位字节排放在内存的高地址端</h4><h4 id="小端模式：低位字节排放在内存的低地址端，高位字节排放在内存的高地址"><a href="#小端模式：低位字节排放在内存的低地址端，高位字节排放在内存的高地址" class="headerlink" title="小端模式：低位字节排放在内存的低地址端，高位字节排放在内存的高地址"></a>小端模式：低位字节排放在内存的低地址端，高位字节排放在内存的高地址</h4><h1 id="2-具象化的例子："><a href="#2-具象化的例子：" class="headerlink" title="2.具象化的例子："></a>2.具象化的例子：</h1><h4 id="比如有一个数字0x12-34-56-78（12开始高位地址，78是低位地址）"><a href="#比如有一个数字0x12-34-56-78（12开始高位地址，78是低位地址）" class="headerlink" title="比如有一个数字0x12 34 56 78（12开始高位地址，78是低位地址）"></a>比如有一个数字0x12 34 56 78（12开始高位地址，78是低位地址）</h4><h3 id="大端："><a href="#大端：" class="headerlink" title="大端："></a>大端：</h3><h4 id="低地址-——————–-gt-高地址"><a href="#低地址-——————–-gt-高地址" class="headerlink" title="低地址 ——————–&gt; 高地址"></a>低地址 ——————–&gt; 高地址</h4><h4 id="0x12-0x34-0x56-0x78"><a href="#0x12-0x34-0x56-0x78" class="headerlink" title="0x12  |  0x34  |  0x56  |  0x78"></a>0x12  |  0x34  |  0x56  |  0x78</h4><h3 id="小端："><a href="#小端：" class="headerlink" title="小端："></a>小端：</h3><h4 id="低地址-——————–-gt-高地址-1"><a href="#低地址-——————–-gt-高地址-1" class="headerlink" title="低地址 ——————–&gt; 高地址"></a>低地址 ——————–&gt; 高地址</h4><h4 id="0x78-0x56-0x34-0x12"><a href="#0x78-0x56-0x34-0x12" class="headerlink" title="0x78  |  0x56  |  0x34  |  0x12"></a>0x78  |  0x56  |  0x34  |  0x12</h4><h1 id="3-从软件的角度理解：需要知道不同端模式的处理器进行数据传递时必须要考虑端模式的不同，如进行网络数据传递时，必须要考虑端模式的转换"><a href="#3-从软件的角度理解：需要知道不同端模式的处理器进行数据传递时必须要考虑端模式的不同，如进行网络数据传递时，必须要考虑端模式的转换" class="headerlink" title="3.从软件的角度理解：需要知道不同端模式的处理器进行数据传递时必须要考虑端模式的不同，如进行网络数据传递时，必须要考虑端模式的转换"></a>3.从软件的角度理解：需要知道不同端模式的处理器进行数据传递时必须要考虑端模式的不同，如进行网络数据传递时，必须要考虑端模式的转换</h1><h1 id="4-从系统的角度理解：需要知道处理器在硬件上由于端模式问题在设计中有所不同，而不同的硬件系统可能对应着设计的不同的端系统，涉及到硬件设计方面就不再深追"><a href="#4-从系统的角度理解：需要知道处理器在硬件上由于端模式问题在设计中有所不同，而不同的硬件系统可能对应着设计的不同的端系统，涉及到硬件设计方面就不再深追" class="headerlink" title="4.从系统的角度理解：需要知道处理器在硬件上由于端模式问题在设计中有所不同，而不同的硬件系统可能对应着设计的不同的端系统，涉及到硬件设计方面就不再深追"></a>4.从系统的角度理解：需要知道处理器在硬件上由于端模式问题在设计中有所不同，而不同的硬件系统可能对应着设计的不同的端系统，涉及到硬件设计方面就不再深追</h1><p>参考：</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://www.cnblogs.com/little-white/p/3236548.html</span><br></pre></td></tr></table></figure>]]></content>
+      
+      
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>Solidity-Study-Notes</title>
       <link href="/hexoblog.github.io/2022/10/15/Solidity-Study-Notes/"/>
       <url>/hexoblog.github.io/2022/10/15/Solidity-Study-Notes/</url>
