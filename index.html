@@ -188,6 +188,65 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://cofeesy.github.io/hexoblog.github.io/2023/06/26/Etherium/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/hexoblog.github.io/images/avatar.gif">
+      <meta itemprop="name" content="Cofeesy">
+      <meta itemprop="description" content="凡是过往，皆为序章">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Cofeesy的博客">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/hexoblog.github.io/2023/06/26/Etherium/" class="post-title-link" itemprop="url">Etherium</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2023-06-26 20:49:22 / 修改时间：20:51:23" itemprop="dateCreated datePublished" datetime="2023-06-26T20:49:22+08:00">2023-06-26</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <hr>
+<h1 id="Introduction-to-Etherium"><a href="#Introduction-to-Etherium" class="headerlink" title="Introduction to Etherium"></a>Introduction to Etherium</h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://www.mubucm.com/doc/b_XdisTMMc</span><br></pre></td></tr></table></figure>
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://cofeesy.github.io/hexoblog.github.io/2023/06/26/%E5%85%B1%E8%AF%86%E6%9C%BA%E5%88%B6/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -236,87 +295,6 @@
             </div>
           <!--/noindex-->
         
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://cofeesy.github.io/hexoblog.github.io/2023/03/25/%E5%88%9D%E8%AF%86kademlia%E7%AE%97%E6%B3%95/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/hexoblog.github.io/images/avatar.gif">
-      <meta itemprop="name" content="Cofeesy">
-      <meta itemprop="description" content="凡是过往，皆为序章">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Cofeesy的博客">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/hexoblog.github.io/2023/03/25/%E5%88%9D%E8%AF%86kademlia%E7%AE%97%E6%B3%95/" class="post-title-link" itemprop="url">初识kademlia算法</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2023-03-25 23:33:51" itemprop="dateCreated datePublished" datetime="2023-03-25T23:33:51+08:00">2023-03-25</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-05-16 19:05:06" itemprop="dateModified" datetime="2023-05-16T19:05:06+08:00">2023-05-16</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <hr>
-<!--main-->
-
-<h1 id="P2P网络-前提"><a href="#P2P网络-前提" class="headerlink" title="P2P网络-前提"></a>P2P网络-前提</h1><p>在认识kademlia算法之前，有必要知道P2P网络对等网络的一些知识；</p>
-<h3 id="P2P网络从架构上主要分为非结构化覆盖网和结构化覆盖网。"><a href="#P2P网络从架构上主要分为非结构化覆盖网和结构化覆盖网。" class="headerlink" title="P2P网络从架构上主要分为非结构化覆盖网和结构化覆盖网。"></a>P2P网络从架构上主要分为非结构化覆盖网和结构化覆盖网。</h3><ul>
-<li>非结构化覆盖网要么采用集中的服务器提供信息查询服务，存在单点故障，要么采用洪泛(flooding)搜索机制，查询从一个节点以广 播方式发送到网络中其它节点，查询效率低下，同时产生大量网络带宽，但是其网络结构较为简单，易于实现。</li>
-<li>结构化覆盖网络一般通过杂散(hashing) 方式来组织网络节点和消息 路由，每个节点都有一个唯一的标识(ID)，而每一个存储对象以其对应的散列值作为唯一表示，而且节点标 识的名字空间和对象标识的名字空间</li>
-</ul>
-<h1 id="认识kademlia算法"><a href="#认识kademlia算法" class="headerlink" title="认识kademlia算法"></a>认识kademlia算法</h1><p>当然，kademlia算法严格上来说是属于结构化覆盖网络；如今的以太坊的网络构建层主要的就是基于此算法进行网络层的各种操作以及IPFS内部也使用的是此协议管理网路节点</p>
-<h3 id="一些特性"><a href="#一些特性" class="headerlink" title="一些特性"></a>一些特性</h3><ul>
-<li>Kademlia采用(键，值)对存储和查询对象信息，其中键通过加密算法得到，网络中每个节点也拥有一个标识符-(随机得到)</li>
-</ul>
-<h3 id="模型描述"><a href="#模型描述" class="headerlink" title="模型描述"></a>模型描述</h3><ol>
-<li><p>由于Kad网络中每个节点会被分配唯一的节点ID，而节点之间可以计算距离，计算距离实际上是异或操作(XOR)，即：给定两个标识符 X，Y，标识符 X，Y之间的距离d(X,Y) &#x3D; X(XOR)Y &#x3D;&gt; 因此可以由此得到一个结论：节点之间的距离越近，意味着节点ID的公共前缀(cpl)越长<br> (注:这里节点间的距离非物理距离)</p>
-</li>
-<li></li>
-</ol>
-
       
     </div>
 
