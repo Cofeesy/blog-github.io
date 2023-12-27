@@ -4,6 +4,19 @@
   
     
     <entry>
+      <title>学习篇</title>
+      <link href="/hexoblog.github.io/2023/12/27/web3%E6%95%B0%E6%8D%AE%E7%BB%8F%E6%B5%8E%20%E5%AD%A6%E4%B9%A0%E7%AF%87/"/>
+      <url>/hexoblog.github.io/2023/12/27/web3%E6%95%B0%E6%8D%AE%E7%BB%8F%E6%B5%8E%20%E5%AD%A6%E4%B9%A0%E7%AF%87/</url>
+      
+        <content type="html"><![CDATA[<span id="more"></span><h3 id="学习视频"><a href="#学习视频" class="headerlink" title="学习视频"></a>学习视频</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://www.bilibili.com/video/BV1gj411r77w/?spm_id_from=333.337.search-card.all.click</span><br></pre></td></tr></table></figure><h4 id="本篇博客采用自问自答的方式回答博主的一些问题："><a href="#本篇博客采用自问自答的方式回答博主的一些问题：" class="headerlink" title="本篇博客采用自问自答的方式回答博主的一些问题："></a>本篇博客采用自问自答的方式回答博主的一些问题：</h4><h3 id="1-Web3数据经济是什么？"><a href="#1-Web3数据经济是什么？" class="headerlink" title="1.Web3数据经济是什么？"></a>1.Web3数据经济是什么？</h3><p>首先，web3数据经济是通证经济，即我们熟知的NFT（代表着使用权、股权和数字通证，对应着功能性代币、权益性代币和非同质化代币，因此也被称为三代币模型）做为经济活动的价值标记物，在有分布式特征和共识机制的加持下让其价值的归属变得透明；其次，这是一种开放经济模型，对比数据经济流通受地域或国家影响的封闭经济，开放经济web3数据经济的一个非常明显的特色。</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">题外：</span><br><span class="line">功能性代币：代表数字产品和服务的使用权，比如，项目方将持有某一种代币的地址锁定为目标群体，向该地址空投项目的治理代币，这种空投代币就是功能性代币。</span><br><span class="line">权益性代币：代表着授予给项目方和早期投资者的股权，权益型代币不会在股票交易所上挂牌交易，而是以 STO（权益型代币发行）方式进入虚拟资产交易所。</span><br><span class="line">非同质化代币：是真正意义上的「数字通证」，能够将确权事务资产化，能够连接现实世界和虚拟世界，例如opensea上的NFT</span><br></pre></td></tr></table></figure><h3 id="2-”数据竖井”问题"><a href="#2-”数据竖井”问题" class="headerlink" title="2.”数据竖井”问题"></a>2.”数据竖井”问题</h3><p>这个问题是目前web2存在的根深蒂固的问题，即数据流通方向单一，例如谷歌公司，其封闭的服务器将所有相关的数据占为己有，其数据流通像水通过竖井一般，而web3也有一些破局方案，如filecoin-一种去中心化存储方案，其未来愿景更是将分布式的数据存储作为一种可购买的产品，但如何将ipfs与其经济模型结合仍待解决</p><h3 id="3-web3数据经济的作用是什么？"><a href="#3-web3数据经济的作用是什么？" class="headerlink" title="3.web3数据经济的作用是什么？"></a>3.web3数据经济的作用是什么？</h3><p>这个问题我觉得在问题1中应该就已经很好的体现了，用一个具象化的例子来解释，我们都知道公司或政府需要同时拥有AI expertise knowledge和data是比较困难的事情，web3数据经济应运而生，其目的就是让整个供应链更好的运转</p><h3 id="4-那么web3数据经济有应用场景吗？"><a href="#4-那么web3数据经济有应用场景吗？" class="headerlink" title="4.那么web3数据经济有应用场景吗？"></a>4.那么web3数据经济有应用场景吗？</h3><p>同样举几个方向的例子：</p><ul><li>自动驾驶汽车数据模型：一个从事自动驾驶汽车相关的公司往往需要在前期有很多很多的数据用于评估，若自行探索，则往往需要大量的时间进行数据收集，而web3数据经济模型提供平台或者数据流动的方式，能够解决大部分的需求</li><li>政策抉择</li><li>癌症预测</li><li>农业<br>等等</li></ul><h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>开放、无许可是web3数据经济的最大特征，在数据流通方面，秉持数据就是金钱的原则就能够切身体会web3数据经济的未来时效性</p>]]></content>
+      
+      
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>Etherium</title>
       <link href="/hexoblog.github.io/2023/06/26/Etherium/"/>
       <url>/hexoblog.github.io/2023/06/26/Etherium/</url>
